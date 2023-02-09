@@ -34,8 +34,6 @@ requirements:
     - make                                   # [unix]
     - pkg-config
   host:
-    # win64 needs boost along with libboost and py-boost.
-    - boost                                  # [win]
     - libboost
     - py-boost
     - cairo
