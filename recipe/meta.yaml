@@ -13,7 +13,7 @@ source:
 
 build:
   number: 0
-  skip: True # [ppc64le]
+  skip: True # [s390x]
   skip: True # [py<37]
   missing_dso_whitelist:
     - '*/RDKit*dll'  # [win]
@@ -31,7 +31,8 @@ requirements:
     - make                                   # [unix]
     - pkg-config
   host:
-    - boost
+    - libboost
+    - py-boost
     - cairo
     - eigen
     - freetype
@@ -40,7 +41,8 @@ requirements:
     - pillow
     - pandas
   run:
-    - boost
+    - libboost
+    - py-boost
     - cairo
     - python
     - pillow
@@ -75,6 +77,7 @@ test:
 about:
   home: https://rdkit.org
   license: BSD-3-Clause
+  license_family: BSD
   license_file: license.txt
   summary: RDKit is a collection of cheminformatics and machine-learning software written in C++ and Python.
   description: |
