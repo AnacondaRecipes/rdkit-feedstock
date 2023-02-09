@@ -1,5 +1,5 @@
 {% set name = "rdkit" %}
-{% set version = "2022.03.5" %}
+{% set version = "2022.09.4" %}
 {% set filename = "Release_%s.tar.gz" % version.replace(".", "_") %}
 
 package:
@@ -9,23 +9,26 @@ package:
 source:
   fn: {{ filename }}
   url: https://github.com/rdkit/rdkit/archive/{{ filename }}
-  sha256: 38e6fb9f063b6132310f17e654f2c4350876f9164b0a17b49fe3df7d0555a744
+  sha256: edd30682cc3031cf3f2b1a400f453629db332a1018f355cd3f7ff76b2f7f5398
 
 build:
   number: 0
-  skip: true  # [aarch64]
+  skip: True # [ppc64le]
+  skip: True # [py<37]
   missing_dso_whitelist:
     - '*/RDKit*dll'  # [win]
+  run_exports:
+    - {{ pin_subpackage('rdkit', max_pin='x.x.x') }}
 
 requirements:
   build:
+    - {{ compiler('cxx') }}
     - python                                 # [build_platform != target_platform]
     - cross-python_{{ target_platform }}     # [build_platform != target_platform]
     - numpy                                  # [build_platform != target_platform]
-    - {{ compiler('cxx') }}
     - cmake
-    - jom  # [win]
-    - make  # [unix]
+    - jom                                    # [win]
+    - make                                   # [unix]
     - pkg-config
   host:
     - boost
@@ -42,7 +45,7 @@ requirements:
     - python
     - pillow
     - pandas
-    - {{ pin_compatible('numpy') }}
+    - numpy
     - pycairo
     - matplotlib-base
     - sqlalchemy
@@ -51,6 +54,7 @@ requirements:
 test:
   commands:
     - python -c "import rdkit; assert rdkit.__version__ == '{{ version }}'"
+    - if not exist %LIBRARY_INC%\\rdkit\\Catalogs\\Catalog.h exit 1   # [win]
   imports:
     - rdkit
     - rdkit.Avalon
@@ -68,27 +72,16 @@ test:
     - rdkit.VLib
     - rdkit.VLib.NodeLib
 
-outputs:
-  - name: rdkit
-  - name: rdkit-dev
-    script: install_rdkit_dev.bat  # [win]
-    requirements:
-      run:
-        - rdkit
-    test:
-      commands:
-        - if not exist %LIBRARY_INC%\\rdkit\\Catalogs\\Catalog.h exit 1   # [win]
-    about:
-      summary: RDKit headers and library used in rdkit package
-      license: BSD-3-Clause
-      license_file: license.txt
-
 about:
-  home: http://rdkit.org
+  home: https://rdkit.org
   license: BSD-3-Clause
   license_file: license.txt
   summary: RDKit is a collection of cheminformatics and machine-learning software written in C++ and Python.
-  doc_url: http://www.rdkit.org/docs/index.html
+  description: |
+      RDKit is open-source cheminformatics software comprised of core modules written in C++, and optional
+      wrappers for Python, Java, and C#. It supports 2D and 3D molecular operations, descriptor generation
+      for machine learning, and cheminformatics nodes for KNIME, among other features.
+  doc_url: https://www.rdkit.org/docs/index.html
   dev_url: https://github.com/rdkit/rdkit
 
 extra:
@@ -96,3 +89,4 @@ extra:
     - pstjohn
     - mcs07
     - jaimergp
+    - sumit0190

@@ -13,6 +13,7 @@ cmake ^
     -D RDK_BUILD_INCHI_SUPPORT=ON ^
     -D RDK_BUILD_FREESASA_SUPPORT=ON ^
     -D RDK_BUILD_YAEHMOP_SUPPORT=ON ^
+    -D RDK_BUILD_XYZ2MOL_SUPPORT=ON ^
     -D RDK_INSTALL_STATIC_LIBS=OFF ^
     -D RDK_INSTALL_DLLS_MSVC=ON ^
     -D RDK_INSTALL_DEV_COMPONENT=OFF ^
@@ -29,3 +30,14 @@ if errorlevel 1 exit 1
 REM copy .dll files to LIBRARY_BIN
 copy bin\*.dll %LIBRARY_BIN%
 
+REM copy .h files to LIBRARY_INC
+mkdir %LIBRARY_INC%\rdkit
+xcopy /y /s Code\*.h %LIBRARY_INC%\rdkit
+
+REM copy external .h files to LIBRARY_INC
+xcopy /y External\INCHI-API\*.h %LIBRARY_INC%\rdkit\GraphMol
+xcopy /y External\AvalonTools\*.h %LIBRARY_INC%\rdkit\GraphMol
+xcopy /y External\FreeSASA\*.h %LIBRARY_INC%\rdkit\GraphMol
+xcopy /y External\CoordGen\*.h %LIBRARY_INC%\rdkit\GraphMol
+xcopy /y External\YAeHMOP\*.h %LIBRARY_INC%\rdkit\GraphMol
+xcopy /y External\RingFamilies\RingDecomposerLib\src\RingDecomposerLib\RingDecomposerLib.h %LIBRARY_INC%\rdkit
