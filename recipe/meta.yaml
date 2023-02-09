@@ -19,6 +19,9 @@ build:
     - '*/RDKit*dll'  # [win]
   run_exports:
     - {{ pin_subpackage('rdkit', max_pin='x.x.x') }}
+  ignore_run_exports:
+    # This is not required by any library, it's just exported by cairo.
+    - pixman
 
 requirements:
   build:
@@ -31,6 +34,8 @@ requirements:
     - make                                   # [unix]
     - pkg-config
   host:
+    # win64 needs boost along with libboost and py-boost.
+    - boost                                  # [win]
     - libboost
     - py-boost
     - cairo
