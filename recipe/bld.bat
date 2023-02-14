@@ -1,3 +1,6 @@
+REM Change Python header location.
+xcopy %LIBRARY_INC%\boost\python\python.hpp %LIBRARY_INC%\boost
+
 cmake ^
     -G "NMake Makefiles JOM" ^
     -D CMAKE_BUILD_TYPE=Release ^

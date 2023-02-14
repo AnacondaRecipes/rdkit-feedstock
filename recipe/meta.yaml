@@ -13,10 +13,8 @@ source:
 
 build:
   number: 0
-  # We skip s390x because it's not supported, and win because of boost weirdness.
-  # win SHOULD work though, and this recipe does build with boost from CF so it's
-  # something we'll need to fix at some point.
-  skip: True # [s390x or win]
+  # We skip s390x because it's not supported.
+  skip: True # [s390x]
   skip: True # [py<37]
   missing_dso_whitelist:
     - '*/RDKit*dll'  # [win]
@@ -36,6 +34,7 @@ requirements:
     - make                                   # [unix]
     - pkg-config
   host:
+    - boost-cpp                              # [win]
     - libboost
     - py-boost
     - cairo
