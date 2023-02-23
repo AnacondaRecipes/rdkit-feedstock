@@ -1,0 +1,9 @@
+
+aggregate_check: false
+
+upload_channels:
+  - forklift
+
+channels:
+  - services
+  - forklift
