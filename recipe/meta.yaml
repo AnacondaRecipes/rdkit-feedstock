@@ -32,22 +32,22 @@ requirements:
     - ninja
     - pkg-config
   host:
-    - boost-cpp 1.73.0                             # [win]
+    - boost-cpp                            # [win]
     - cairo
-    - eigen 3.3.7
+    - eigen
     - freetype
-    - libboost 1.73.0
+    - libboost
     - numpy
     - pandas
     - pillow
-    - py-boost 1.73.0
+    - py-boost
     - python
     - setuptools
     - wheel
   run:
     - {{ pin_compatible('numpy') }}
-    - cairo >=1.16.0,<2.0a0
-    - libboost >=1.73.0,<1.73.1.0a0
+    - cairo
+    - libboost
     - matplotlib-base
     - pandas
     - pillow
