@@ -27,35 +27,37 @@ build:
 requirements:
   build:
     - {{ compiler('cxx') }}
+    - python
     - numpy
     - cmake
-    - ninja
+    - jom                                    # [win]
+    - make                                   # [unix]
     - pkg-config
   host:
-    - boost-cpp                            # [win]
+    - boost-cpp                              # [win]
+    - libboost
+    - py-boost
     - cairo
     - eigen
     - freetype
-    - libboost
-    - numpy
-    - pandas
-    - pillow
-    - py-boost
     - python
+    - numpy
+    - pillow
+    - pandas
     - setuptools
     - wheel
   run:
-    - {{ pin_compatible('numpy') }}
-    - cairo
     - libboost
-    - matplotlib-base
-    - pandas
-    - pillow
     - py-boost
-    - pycairo
+    - cairo
     - python
-    - reportlab
+    - pillow
+    - pandas
+    - {{ pin_compatible('numpy') }}
+    - pycairo
+    - matplotlib-base
     - sqlalchemy
+    - reportlab
 
 test:
   commands:

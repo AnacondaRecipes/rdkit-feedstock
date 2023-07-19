@@ -1,22 +1,10 @@
-:: cmd
-echo "Building %PKG_NAME%."
-
-
-:: Isolate the build.
-mkdir Build-%PKG_NAME%
-cd Build-%PKG_NAME%
-if errorlevel 1 exit /b 1
-
 REM Change Python header location.
 xcopy %LIBRARY_INC%\boost\python\python.hpp %LIBRARY_INC%\boost
 
-:: Generate the build files.
-echo "Generating the build files..."
-cmake .. %CMAKE_ARGS% ^
-    -G"Ninja" ^
-    -D CMAKE_PREFIX_PATH=%LIBRARY_PREFIX% ^
-    -D CMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX% ^
+cmake ^
+    -G "NMake Makefiles JOM" ^
     -D CMAKE_BUILD_TYPE=Release ^
+    -D CMAKE_INSTALL_PREFIX="%LIBRARY_PREFIX%" ^
     -D BOOST_ROOT="%LIBRARY_PREFIX%" ^
     -D Boost_NO_SYSTEM_PATHS=ON ^
     -D Boost_NO_BOOST_CMAKE=ON ^
@@ -34,19 +22,14 @@ cmake .. %CMAKE_ARGS% ^
     -D RDK_INSTALL_DLLS_MSVC=ON ^
     -D RDK_INSTALL_DEV_COMPONENT=OFF ^
     -D RDK_INSTALL_INTREE=OFF ^
+    .
 if errorlevel 1 exit 1
 
+cmake --build . --config Release
+if errorlevel 1 exit 1
 
-:: Build.
-echo "Building..."
-ninja -j%CPU_COUNT%
-if errorlevel 1 exit /b 1
-
-
-:: Install.
-echo "Installing..."
-ninja install
-if errorlevel 1 exit /b 1
+cmake --build . --config Release --target install
+if errorlevel 1 exit 1
 
 REM copy .dll files to LIBRARY_BIN
 copy bin\*.dll %LIBRARY_BIN%
@@ -62,8 +45,3 @@ xcopy /y External\FreeSASA\*.h %LIBRARY_INC%\rdkit\GraphMol
 xcopy /y External\CoordGen\*.h %LIBRARY_INC%\rdkit\GraphMol
 xcopy /y External\YAeHMOP\*.h %LIBRARY_INC%\rdkit\GraphMol
 xcopy /y External\RingFamilies\RingDecomposerLib\src\RingDecomposerLib\RingDecomposerLib.h %LIBRARY_INC%\rdkit
-
-
-:: Error free exit.
-echo "Error free exit!"
-exit 0

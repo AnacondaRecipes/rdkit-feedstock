@@ -2,13 +2,6 @@
 
 set -euxo pipefail
 
-echo "Building ${PKG_NAME}."
-
-
-# Isolate the build.
-mkdir -p Build-${PKG_NAME}
-cd Build-${PKG_NAME} || exit 1
-
 POPCNT_OPTIMIZATION="ON"
 if [[ "$target_platform" == linux-ppc64le || "$target_platform" == linux-aarch64 ]]; then
     # PowerPC includes -mcpu=power8 optimizations already
@@ -22,14 +15,9 @@ if [[ "$target_platform" == linux-ppc64le ]]; then
     EXTRA_CMAKE_FLAGS+=" -D PYTHON_NUMPY_INCLUDE_PATH=${SP_DIR}/numpy/core/include"
 fi
 
-# Generate the build files.
-echo "Generating the build files..."
-
-cmake .. ${CMAKE_ARGS} \
--GNinja \
--D CMAKE_PREFIX_PATH=${PREFIX} \
--D CMAKE_INSTALL_PREFIX=${PREFIX} \
+cmake ${CMAKE_ARGS} \
 -D CMAKE_BUILD_TYPE=Release \
+-D CMAKE_INSTALL_PREFIX="$PREFIX" \
 -D BOOST_ROOT="$PREFIX" \
 -D Boost_NO_SYSTEM_PATHS=ON \
 -D Boost_NO_BOOST_CMAKE=ON \
@@ -46,24 +34,14 @@ cmake .. ${CMAKE_ARGS} \
 -D RDK_INSTALL_INTREE=OFF \
 -D RDK_INSTALL_STATIC_LIBS=OFF \
 -D RDK_OPTIMIZE_POPCNT=${POPCNT_OPTIMIZATION} \
-${EXTRA_CMAKE_FLAGS}
+${EXTRA_CMAKE_FLAGS} \
+.
 
-
-# Build.
-echo "Building..."
-ninja -j${CPU_COUNT} || exit 1
+make -j$CPU_COUNT
+make install
 
 ## How to run unit tests:
 ## 1. Set RDK_BUILD_CPP_TESTS to ON
 ## 2. Uncomment lines below
 # export RDBASE="$SRC_DIR"
 # ctest --output-on-failure
-
-# Installing
-echo "Installing..."
-ninja install || exit 1
-
-
-# Error free exit!
-echo "Error free exit!"
-exit 0
