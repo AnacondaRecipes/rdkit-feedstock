@@ -1,5 +1,5 @@
 {% set name = "rdkit" %}
-{% set version = "2022.09.4" %}
+{% set version = "2023.03.2" %}
 {% set filename = "Release_%s.tar.gz" % version.replace(".", "_") %}
 
 package:
@@ -8,14 +8,15 @@ package:
 
 source:
   fn: {{ filename }}
-  url: https://github.com/rdkit/rdkit/archive/{{ filename }}
-  sha256: edd30682cc3031cf3f2b1a400f453629db332a1018f355cd3f7ff76b2f7f5398
+  url: https://github.com/{{ name }}/{{ name }}/archive/{{ filename }}
+  sha256: bb43216b075b93b767e6cbaecd5e95d087da887bcdc51afd36d940d8bd9f9819
 
 build:
   number: 0
   # We skip s390x because it's not supported.
   skip: True # [s390x]
-  skip: True # [py<37]
+  # py-boost hasn't been built for Python 3.11 yet.
+  skip: True # [py<37 or py>310]
   missing_dso_whitelist:
     - '*/RDKit*dll'  # [win]
   run_exports:
@@ -44,6 +45,8 @@ requirements:
     - numpy
     - pillow
     - pandas
+    - setuptools
+    - wheel
   run:
     - libboost
     - py-boost
@@ -51,7 +54,7 @@ requirements:
     - python
     - pillow
     - pandas
-    - numpy
+    - {{ pin_compatible('numpy') }}
     - pycairo
     - matplotlib-base
     - sqlalchemy
