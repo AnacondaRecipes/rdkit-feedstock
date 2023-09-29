@@ -14,7 +14,8 @@ source:
 build:
   number: 0
   # We skip s390x because it's not supported.
-  skip: True # [py<37 or s390x]
+  #skip: True # [py<37 or s390x or (win and py>310)]
+  skip: true  # [py>310 or not win]
   missing_dso_whitelist:
     - '*/RDKit*dll'  # [win]
   run_exports:
@@ -44,8 +45,7 @@ requirements:
     - setuptools
     - wheel
   run:
-    - libboost >=1.73.0,<1.73.1.0a0 # [win]
-    - libboost >=1.82.0,<1.82.1.0a0 # [not win]
+    - libboost
     - py-boost
     - python
     - pillow
