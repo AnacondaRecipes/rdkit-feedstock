@@ -30,9 +30,11 @@ requirements:
     - make                                   # [unix]
     - pkg-config
   host:
-    - boost-cpp                              # [win]
-    - libboost
-    - py-boost
+    - boost-cpp 1.73                         # [win]
+    - libboost 1.73                          # [win]
+    - py-boost 1.73                          # [win]
+    - libboost 1.82                          # [not win]
+    - py-boost 1.82                          # [not win]
     - eigen
     - freetype
     - python
@@ -42,7 +44,8 @@ requirements:
     - setuptools
     - wheel
   run:
-    - libboost
+    - libboost >=1.73.0,<1.73.1.0a0 # [win]
+    - libboost >=1.82.0,<1.82.1.0a0 # [not win]
     - py-boost
     - python
     - pillow
