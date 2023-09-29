@@ -1,5 +1,5 @@
 {% set name = "rdkit" %}
-{% set version = "2023.03.2" %}
+{% set version = "2023.03.3" %}
 {% set filename = "Release_%s.tar.gz" % version.replace(".", "_") %}
 
 package:
@@ -9,14 +9,12 @@ package:
 source:
   fn: {{ filename }}
   url: https://github.com/{{ name }}/{{ name }}/archive/{{ filename }}
-  sha256: bb43216b075b93b767e6cbaecd5e95d087da887bcdc51afd36d940d8bd9f9819
+  sha256: bdbf9a2e6988526bfeb8c56ce3cdfe2998d60ac289078e2215374288185e8c8d
 
 build:
   number: 0
   # We skip s390x because it's not supported.
-  skip: True # [s390x]
-  # py-boost hasn't been built for Python 3.11 yet.
-  skip: True # [py<37 or py>310]
+  skip: True # [py<37 or s390x]
   missing_dso_whitelist:
     - '*/RDKit*dll'  # [win]
   run_exports:
@@ -38,11 +36,10 @@ requirements:
     - boost-cpp                              # [win]
     - libboost
     - py-boost
-    - cairo
     - eigen
     - freetype
     - python
-    - numpy
+    - numpy {{ numpy }}
     - pillow
     - pandas
     - setuptools
@@ -50,20 +47,15 @@ requirements:
   run:
     - libboost
     - py-boost
-    - cairo
     - python
     - pillow
     - pandas
     - {{ pin_compatible('numpy') }}
-    - pycairo
     - matplotlib-base
     - sqlalchemy
     - reportlab
 
 test:
-  commands:
-    - python -c "import rdkit; assert rdkit.__version__ == '{{ version }}'"
-    - if not exist %LIBRARY_INC%\\rdkit\\Catalogs\\Catalog.h exit 1   # [win]
   imports:
     - rdkit
     - rdkit.Avalon
@@ -80,6 +72,11 @@ test:
     - rdkit.SimDivFilters
     - rdkit.VLib
     - rdkit.VLib.NodeLib
+  requires:
+    - pip
+  commands:
+    - python -c "import rdkit; assert rdkit.__version__ == '{{ version }}'"
+    - if not exist %LIBRARY_INC%\\rdkit\\Catalogs\\Catalog.h exit 1   # [win]
 
 about:
   home: https://rdkit.org
