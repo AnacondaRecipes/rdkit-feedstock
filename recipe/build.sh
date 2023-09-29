@@ -15,6 +15,9 @@ if [[ "$target_platform" == linux-ppc64le ]]; then
     EXTRA_CMAKE_FLAGS+=" -D PYTHON_NUMPY_INCLUDE_PATH=${SP_DIR}/numpy/core/include"
 fi
 
+# `cairo` was needed to generate high-quality PNGs for structure depiction,
+# see https://www.rdkit.org/docs/Install.html?highlight=cairo#recommended-extras
+# but we disable it intentionally staring from v2023.03.3
 cmake ${CMAKE_ARGS} \
 -D CMAKE_BUILD_TYPE=Release \
 -D CMAKE_INSTALL_PREFIX="$PREFIX" \

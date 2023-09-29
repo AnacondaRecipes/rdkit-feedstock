@@ -19,9 +19,6 @@ build:
     - '*/RDKit*dll'  # [win]
   run_exports:
     - {{ pin_subpackage('rdkit', max_pin='x.x.x') }}
-  ignore_run_exports:
-    # This is not required by any library, it's just exported by cairo.
-    - pixman
 
 requirements:
   build:
@@ -61,6 +58,7 @@ test:
     - rdkit.Avalon
     - rdkit.Chem
     - rdkit.Chem.AllChem
+    - rdkit.Chem.Draw
     - rdkit.Chem.rdFreeSASA
     - rdkit.DataManip
     - rdkit.Dbase
