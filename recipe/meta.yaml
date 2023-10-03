@@ -15,7 +15,7 @@ build:
   number: 0
   # We skip s390x because it's not supported.
   # py-boost 1.73 isn't available for Python 3.11 on Windows.
-  # libboost 1.82 doesn't work on Windows.
+  # libboost 1.82 doesn't work on Windows. Check if the next release will fix the issue
   skip: True # [py<37 or s390x or (win and py>310)]
   missing_dso_whitelist:
     - '*/RDKit*dll'  # [win]
@@ -65,6 +65,7 @@ test:
     - rdkit.Chem
     - rdkit.Chem.AllChem
     - rdkit.Chem.Draw
+    - rdkit.Chem.Draw.rdMolDraw2D
     - rdkit.Chem.rdFreeSASA
     - rdkit.DataManip
     - rdkit.Dbase
@@ -79,6 +80,7 @@ test:
   requires:
     - pip
   commands:
+    - pip check
     - python -c "import rdkit; assert rdkit.__version__ == '{{ version }}'"
     - if not exist %LIBRARY_INC%\\rdkit\\Catalogs\\Catalog.h exit 1   # [win]
 
