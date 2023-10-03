@@ -19,7 +19,9 @@ build:
   #skip: True # [py<37 or s390x or (win and py>310)]
   skip: true  # [not win]
   missing_dso_whitelist:
-    - '*/RDKit*dll'  # [win]
+    - '*/RDKit*dll'                     # [win]
+    - '$RPATH/boost_serialization.dll'  # [win]
+    - '$RPATH/boost_iostreams.dll'      # [win]
   run_exports:
     - {{ pin_subpackage('rdkit', max_pin='x.x.x') }}
 
