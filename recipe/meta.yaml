@@ -37,7 +37,6 @@ requirements:
   host:
     # Boost 1.82 has an issue on Windows: `error C2668: 'boost::hash_value': ambiguous call to overloaded function`,
     # to avoid this we use Boost 1.73 on Windows.
-    - boost-cpp 1.82
     - libboost 1.82
     - py-boost
     - eigen
