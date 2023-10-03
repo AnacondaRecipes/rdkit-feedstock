@@ -16,7 +16,8 @@ build:
   # We skip s390x because it's not supported.
   # py-boost 1.73 isn't available for Python 3.11 on Windows.
   # libboost 1.82 doesn't work on Windows. Check if the next release will fix the issue
-  skip: True # [py<37 or s390x or (win and py>310)]
+  #skip: True # [py<37 or s390x or (win and py>310)]
+  skip: true  # [not win]
   missing_dso_whitelist:
     - '*/RDKit*dll'  # [win]
   run_exports:
@@ -34,11 +35,9 @@ requirements:
   host:
     # Boost 1.82 has an issue on Windows: `error C2668: 'boost::hash_value': ambiguous call to overloaded function`,
     # to avoid this we use Boost 1.73 on Windows.
-    - boost-cpp 1.73                         # [win]
-    - libboost 1.73                          # [win]
-    - py-boost 1.73                          # [win]
-    - libboost 1.82                          # [not win]
-    - py-boost 1.82                          # [not win]
+    - boost-cpp 1.82
+    - libboost 1.82
+    - py-boost
     - eigen
     - freetype
     - python
