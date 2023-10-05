@@ -20,8 +20,6 @@ build:
   skip: true  # [not win]
   missing_dso_whitelist:
     - '*/RDKit*dll'                     # [win]
-    - '$RPATH/boost_serialization.dll'  # [win]
-    - '$RPATH/boost_iostreams.dll'      # [win]
   run_exports:
     - {{ pin_subpackage('rdkit', max_pin='x.x.x') }}
 
