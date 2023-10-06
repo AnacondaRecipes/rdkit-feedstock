@@ -7,7 +7,6 @@ package:
   version: {{ version }}
 
 source:
-  fn: {{ filename }}
   url: https://github.com/{{ name }}/{{ name }}/archive/{{ filename }}
   sha256: bdbf9a2e6988526bfeb8c56ce3cdfe2998d60ac289078e2215374288185e8c8d
 
@@ -15,8 +14,6 @@ build:
   number: 0
   # We skip s390x because it's not supported.
   skip: True # [py<37 or s390x]
-  missing_dso_whitelist:
-    - '*/RDKit*dll'                     # [win]
   run_exports:
     - {{ pin_subpackage('rdkit', max_pin='x.x.x') }}
 
