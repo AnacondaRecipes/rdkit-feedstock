@@ -1,4 +1,3 @@
 upload_channels:
   - sfe1ed40
-channels:
-  - https://staging.continuum.io/prefect/fs/boost-feedstock/pr16/d3a5dc2
+
