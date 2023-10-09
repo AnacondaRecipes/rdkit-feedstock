@@ -1,5 +1,5 @@
 {% set name = "rdkit" %}
-{% set version = "2023.03.2" %}
+{% set version = "2023.03.3" %}
 {% set filename = "Release_%s.tar.gz" % version.replace(".", "_") %}
 
 package:
@@ -7,26 +7,19 @@ package:
   version: {{ version }}
 
 source:
-  fn: {{ filename }}
   url: https://github.com/{{ name }}/{{ name }}/archive/{{ filename }}
-  sha256: bb43216b075b93b767e6cbaecd5e95d087da887bcdc51afd36d940d8bd9f9819
+  sha256: bdbf9a2e6988526bfeb8c56ce3cdfe2998d60ac289078e2215374288185e8c8d
 
 build:
   number: 0
   # We skip s390x because it's not supported.
-  skip: True # [s390x]
-  # py-boost hasn't been built for Python 3.11 yet.
-  skip: True # [py<37 or py>310]
-  missing_dso_whitelist:
-    - '*/RDKit*dll'  # [win]
+  skip: True # [py<37 or s390x]
   run_exports:
     - {{ pin_subpackage('rdkit', max_pin='x.x.x') }}
-  ignore_run_exports:
-    # This is not required by any library, it's just exported by cairo.
-    - pixman
 
 requirements:
   build:
+    - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - python
     - numpy
@@ -35,14 +28,12 @@ requirements:
     - make                                   # [unix]
     - pkg-config
   host:
-    - boost-cpp                              # [win]
-    - libboost
-    - py-boost
-    - cairo
+    - libboost {{ boost }}
+    - py-boost {{ boost }}
     - eigen
     - freetype
     - python
-    - numpy
+    - numpy {{ numpy }}
     - pillow
     - pandas
     - setuptools
@@ -50,25 +41,22 @@ requirements:
   run:
     - libboost
     - py-boost
-    - cairo
     - python
     - pillow
     - pandas
     - {{ pin_compatible('numpy') }}
-    - pycairo
     - matplotlib-base
     - sqlalchemy
     - reportlab
 
 test:
-  commands:
-    - python -c "import rdkit; assert rdkit.__version__ == '{{ version }}'"
-    - if not exist %LIBRARY_INC%\\rdkit\\Catalogs\\Catalog.h exit 1   # [win]
   imports:
     - rdkit
     - rdkit.Avalon
     - rdkit.Chem
     - rdkit.Chem.AllChem
+    - rdkit.Chem.Draw
+    - rdkit.Chem.Draw.rdMolDraw2D
     - rdkit.Chem.rdFreeSASA
     - rdkit.DataManip
     - rdkit.Dbase
@@ -80,6 +68,12 @@ test:
     - rdkit.SimDivFilters
     - rdkit.VLib
     - rdkit.VLib.NodeLib
+  requires:
+    - pip
+  commands:
+    - pip check
+    - python -c "import rdkit; assert rdkit.__version__ == '{{ version }}'"
+    - if not exist %LIBRARY_INC%\\rdkit\\Catalogs\\Catalog.h exit 1   # [win]
 
 about:
   home: https://rdkit.org

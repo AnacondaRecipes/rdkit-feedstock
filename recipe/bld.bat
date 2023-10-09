@@ -1,6 +1,9 @@
 REM Change Python header location.
 xcopy %LIBRARY_INC%\boost\python\python.hpp %LIBRARY_INC%\boost
 
+REM `cairo` was needed to generate high-quality PNGs for structure depiction,
+REM see https://www.rdkit.org/docs/Install.html?highlight=cairo#recommended-extras
+REM but we disable it intentionally staring from v2023.03.3
 cmake ^
     -G "NMake Makefiles JOM" ^
     -D CMAKE_BUILD_TYPE=Release ^
@@ -11,7 +14,7 @@ cmake ^
     -D PYTHON_EXECUTABLE="%PYTHON%" ^
     -D PYTHON_INSTDIR="%SP_DIR%" ^
     -D RDK_BUILD_AVALON_SUPPORT=ON ^
-    -D RDK_BUILD_CAIRO_SUPPORT=ON ^
+    -D RDK_BUILD_CAIRO_SUPPORT=OFF ^
     -D RDK_BUILD_CPP_TESTS=OFF ^
     -D RDK_BUILD_INCHI_SUPPORT=ON ^
     -D RDK_BUILD_FREESASA_SUPPORT=ON ^
