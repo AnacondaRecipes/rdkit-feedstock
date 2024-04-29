@@ -9,7 +9,10 @@ package:
 source:
   url: https://github.com/{{ name }}/{{ name }}/archive/{{ filename }}
   sha256: e0ff8e330c98b93ac8277a59b2369d9a38027afadb4f03bb34c6924d445f08d5
-
+  # Fixes outdated checksum for downloaded fonts.
+  patches:
+    - fix-install_comic_fonts.patch
+    
 build:
   number: 0
   # We skip s390x because it's not supported.
@@ -19,6 +22,8 @@ build:
 
 requirements:
   build:
+    - patch  # [not win]
+    - m2-patch  # [win]
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - python
