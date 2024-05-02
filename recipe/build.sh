@@ -47,4 +47,4 @@ make install
 ## 1. Set RDK_BUILD_CPP_TESTS to ON
 ## 2. Uncomment lines below
 export RDBASE="$SRC_DIR"
-ctest --output-on-failure -E "testConrec|pythonTestDirDbase|pythonTestDirChem"
+ctest --output-on-failure -E "testConrec|pythonTestDirDbase|pythonTestDirChem|pythonTestDirML"
