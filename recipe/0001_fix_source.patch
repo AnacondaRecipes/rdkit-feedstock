@@ -1,0 +1,70 @@
+diff --git a/Code/DataStructs/RealValueVect.h b/Code/DataStructs/RealValueVect.h
+index 8da58d4c1..9ef21ae71 100644
+--- a/Code/DataStructs/RealValueVect.h
++++ b/Code/DataStructs/RealValueVect.h
+@@ -15,6 +15,7 @@
+ #include <boost/smart_ptr.hpp>
+ #include <string>
+ #include <cstring>
++#include <vector>
+ 
+ namespace RDGeom {
+ class UniformRealValueGrid3D;
+diff --git a/Code/GraphMol/EnumerateStereoisomers/catch_tests.cpp b/Code/GraphMol/EnumerateStereoisomers/catch_tests.cpp
+index d71410f08..fd02193cd 100644
+--- a/Code/GraphMol/EnumerateStereoisomers/catch_tests.cpp
++++ b/Code/GraphMol/EnumerateStereoisomers/catch_tests.cpp
+@@ -8,7 +8,7 @@
+ //  of the RDKit source tree.
+ //
+ 
+-#include <ranges>
++#include <algorithm>
+ #include <unordered_set>
+ 
+ #include <GraphMol/CIPLabeler/CIPLabeler.h>
+@@ -313,7 +313,7 @@ TEST_CASE("Issue 3231") {
+   while (auto isomer = enu.next()) {
+     chiCents.push_back(getCIPLabels(*isomer));
+   }
+-  std::ranges::sort(chiCents);
++  std::sort(chiCents.begin(), chiCents.end());
+   chiCents.erase(std::unique(chiCents.begin(), chiCents.end()), chiCents.end());
+ 
+   std::vector<std::vector<std::pair<unsigned int, std::string>>> expCents{
+diff --git a/External/pubchem_shape/PubChemShape.cpp b/External/pubchem_shape/PubChemShape.cpp
+index b3b608d76..648e9a68b 100644
+--- a/External/pubchem_shape/PubChemShape.cpp
++++ b/External/pubchem_shape/PubChemShape.cpp
+@@ -1,7 +1,7 @@
+ #include <iostream>
+-#include <ranges>
+ #include <sstream>
+ #include <stdexcept>
++#include <algorithm>
+ 
+ #include <GraphMol/RWMol.h>
+ #include <GraphMol/SmilesParse/SmilesParse.h>
+@@ -254,18 +254,18 @@ bool atomInSubset(unsigned int atomIdx, const ShapeInputOptions &shapeOpts) {
+   if (shapeOpts.atomSubset.empty()) {
+     return true;
+   }
+-  return std::ranges::find(shapeOpts.atomSubset, atomIdx) !=
++  return std::find(shapeOpts.atomSubset.begin(), shapeOpts.atomSubset.end(), atomIdx) !=
+          shapeOpts.atomSubset.end();
+ }
+ bool atomAllowedInColor(unsigned int atomIdx,
+                         const ShapeInputOptions &shapeOpts) {
+-  return std::ranges::find(shapeOpts.notColorAtoms, atomIdx) ==
++  return std::find(shapeOpts.notColorAtoms.begin(), shapeOpts.notColorAtoms.end(), atomIdx) ==
+          shapeOpts.notColorAtoms.end();
+ }
+ 
+ double getAtomRadius(unsigned int atomIdx, const ShapeInputOptions &shapeOpts) {
+-  auto it = std::ranges::find_if(
+-      shapeOpts.atomRadii,
++  auto it = std::find_if(
++      shapeOpts.atomRadii.begin(), shapeOpts.atomRadii.end(),
+       [atomIdx](const auto &p) -> bool { return p.first == atomIdx; });
+   return it == shapeOpts.atomRadii.end() ? -1.0 : it->second;
+ }
