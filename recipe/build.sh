@@ -50,6 +50,7 @@ make install
 export PYTHONPATH=$SP_DIR:${PYTHONPATH:-}
 export RDBASE=$SRC_DIR
 
+# All these test failed with reason: Subprocess aborted
 ctest --output-on-failure -E \
     "shape_test|graphmoltestPickler|molbundleTestsCatch|testEnumeration|pyChemReactionEnumerations|\
 tautomerQueryTestCatch|pyTautomerQuery|pyFilterCatalog|pyFragCatalog|distGeomHelpersCatch|pyMolDraw2D|\

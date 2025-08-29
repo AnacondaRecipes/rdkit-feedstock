@@ -46,6 +46,7 @@ requirements:
     - eigen {{ eigen }}
     - freetype {{ freetype }}
     - python
+    # Required for tests
     - pytest
     - numpy {{ numpy }}
     - pillow >=10.4.0
@@ -54,10 +55,7 @@ requirements:
   run:
     - python
     - {{ pin_compatible('numpy') }}
-    - matplotlib-base
-    - sqlalchemy
     - pillow
-    - reportlab
 
 test:
   imports:
