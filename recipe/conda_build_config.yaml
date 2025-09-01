@@ -14,5 +14,3 @@ eigen:
   - 3.4.0
 freetype:
   - 2.13.3
-boost:
-  - 1.88.0

@@ -18,11 +18,11 @@ build:
   skip: True # [py<37 or s390x]
   run_exports:
     - {{ pin_subpackage('rdkit', max_pin='x.x.x') }}
-  ignore_run_exports:
-    - numpy
-    - libcxx            # [unix]
-    - ucrt              # [win]
-    - vc14_runtime      # [win]
+  # ignore_run_exports:
+  #   - numpy
+  #   - libcxx            # [unix]
+  #   - ucrt              # [win]
+  #   - vc14_runtime      # [win]
 
 requirements:
   build:
@@ -41,20 +41,24 @@ requirements:
     - make                                   # [unix]
     - pkg-config
   host:
-    - libboost-devel {{ boost }}
-    - libboost-python-devel {{ boost }}
+    - libboost-devel {{ libboost }}
+    - libboost-python-devel {{ libboost }}
     - eigen {{ eigen }}
     - freetype {{ freetype }}
     - python
     # Required for tests
     - pytest
     - numpy {{ numpy }}
-    - pillow >=10.4.0
+    - pillow
     - pandas >=2.2.3
     - setuptools >=58.0.4
   run:
     - python
     - {{ pin_compatible('numpy') }}
+    - pandas
+    - matplotlib-base
+    - reportlab
+    - sqlalchemy
     - pillow
 
 test:
