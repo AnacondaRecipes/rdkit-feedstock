@@ -1,5 +1,5 @@
 {% set name = "rdkit" %}
-{% set version = "2025.03.5" %}
+{% set version = "2025.03.6" %}
 {% set filename = "Release_%s.tar.gz" % version.replace(".", "_") %}
 
 package:
@@ -8,7 +8,7 @@ package:
 
 source:
   url: https://github.com/{{ name }}/{{ name }}/archive/refs/tags/{{ filename }}
-  sha256: 8bdb3c774ed4ae9e2727b6ce005004191447d630d8e857d36839cd8f1bca55b5
+  sha256: aa719755ed10d4068a2037c113faa73007a71b551caf69b946c49cbafe04dadd
   patches:
     - 0001_fix_source.patch
 
