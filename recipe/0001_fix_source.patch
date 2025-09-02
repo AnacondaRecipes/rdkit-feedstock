@@ -47,6 +47,26 @@ index d71410f08..fd02193cd 100644
    chiCents.erase(std::unique(chiCents.begin(), chiCents.end()), chiCents.end());
  
    std::vector<std::vector<std::pair<unsigned int, std::string>>> expCents{
+diff --git a/External/ChemDraw/CMakeLists.txt b/External/ChemDraw/CMakeLists.txt
+index d4e88ebce..400b14c5f 100644
+--- a/External/ChemDraw/CMakeLists.txt
++++ b/External/ChemDraw/CMakeLists.txt
+@@ -105,7 +105,14 @@ endif()
+       set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wformat-overflow=0 -Wformat=0 -Wno-format-security")
+   endif()
+ 
+- 
++if(APPLE)
++    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_OS_WIN32=0 -DTARGET_OS_MAC=1 -DTARGET_OS_LINUX=0")
++elseif(WIN32)
++    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_OS_WIN32=1 -DTARGET_OS_MAC=0 -DTARGET_OS_LINUX=0")
++elseif(UNIX)
++    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTARGET_OS_WIN32=0 -DTARGET_OS_MAC=0 -DTARGET_OS_LINUX=1")
++endif()
++
+  include_directories(chemdraw)
+ 
+  set(RDChemDrawLib_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
 diff --git a/External/pubchem_shape/CMakeLists.txt b/External/pubchem_shape/CMakeLists.txt
 index 4de07a088..96e3c77a9 100644
 --- a/External/pubchem_shape/CMakeLists.txt
