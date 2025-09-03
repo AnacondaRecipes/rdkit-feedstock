@@ -1,5 +1,5 @@
 {% set name = "rdkit" %}
-{% set version = "2023.09.1" %}
+{% set version = "2025.03.6" %}
 {% set filename = "Release_%s.tar.gz" % version.replace(".", "_") %}
 
 package:
@@ -7,12 +7,10 @@ package:
   version: {{ version }}
 
 source:
-  url: https://github.com/{{ name }}/{{ name }}/archive/{{ filename }}
-  sha256: e0ff8e330c98b93ac8277a59b2369d9a38027afadb4f03bb34c6924d445f08d5
-  # Fixes outdated checksum for downloaded fonts.
-  # https://github.com/rdkit/rdkit/commit/ba0b6f3bafb391c17d7da9783f09817a4ba0f8f1
+  url: https://github.com/{{ name }}/{{ name }}/archive/refs/tags/{{ filename }}
+  sha256: aa719755ed10d4068a2037c113faa73007a71b551caf69b946c49cbafe04dadd
   patches:
-    - fix-install_comic_fonts.patch
+    - 0001_fix_source.patch
 
 build:
   number: 0
@@ -26,34 +24,37 @@ requirements:
     - patch  # [not win]
     - m2-patch  # [win]
     - {{ compiler('c') }}
+    - {{ stdlib('c') }}
     - {{ compiler('cxx') }}
     - python
     - numpy
-    - cmake
+    - cmake >=3.16
+    # Tests are using catch2 which is unavailable on the main channel,
+    # using vendored one instead
+    - git                                    # [linux]
     - jom                                    # [win]
     - make                                   # [unix]
     - pkg-config
   host:
-    - libboost {{ boost }}
-    - py-boost {{ boost }}
-    - eigen
-    - freetype
+    - libboost-devel {{ libboost }}
+    - libboost-python-devel {{ libboost }}
+    - eigen {{ eigen }}
+    - freetype {{ freetype }}
     - python
+    # Required for tests
+    - pytest
     - numpy {{ numpy }}
     - pillow
-    - pandas
-    - setuptools
-    - wheel
+    - pandas >=2.2.3
+    - setuptools >=58.0.4
   run:
-    - libboost
-    - py-boost
     - python
-    - pillow
-    - pandas
     - {{ pin_compatible('numpy') }}
+    - pandas
     - matplotlib-base
-    - sqlalchemy
     - reportlab
+    - sqlalchemy
+    - pillow
 
 test:
   imports:
