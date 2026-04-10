@@ -127,7 +127,7 @@ test:
     - if not exist %SP_DIR%\rdkit\Chem\rdinchi.pyd exit 1                                      # [win]
     - if not exist %SP_DIR%\rdkit\Chem\rdFreeSASA.pyd exit 1                                   # [win]
     - if not exist %SP_DIR%\rdkit\Chem\MolStandardize\rdMolStandardize.pyd exit 1              # [win]
-    - if not exist %SP_DIR%\rdkit\Avalon\pyAvalonTools.pyd exit 1
+    - if not exist %SP_DIR%\rdkit\Avalon\pyAvalonTools.pyd exit 1                              # [win]
 
 about:
   home: https://rdkit.org
