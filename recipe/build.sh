@@ -3,22 +3,15 @@
 set -euxo pipefail
 
 POPCNT_OPTIMIZATION="ON"
-if [[ "$target_platform" == linux-ppc64le || "$target_platform" == linux-aarch64 ]]; then
-    # PowerPC includes -mcpu=power8 optimizations already
+if [[ "$target_platform" == linux-aarch64 ]]; then
     # ARM does not have popcnt instructions, afaik
     POPCNT_OPTIMIZATION="OFF"
-fi
-
-# Numpy cannot be found in ppc64le for some reason... some extra help will do ;)
-EXTRA_CMAKE_FLAGS=""
-if [[ "$target_platform" == linux-ppc64le ]]; then
-    EXTRA_CMAKE_FLAGS+=" -D PYTHON_NUMPY_INCLUDE_PATH=${SP_DIR}/numpy/core/include"
 fi
 
 # `cairo` was needed to generate high-quality PNGs for structure depiction,
 # see https://www.rdkit.org/docs/Install.html?highlight=cairo#recommended-extras
 # but we  disable it by customer requested to avoid having dependency on cairo->libX11 as staring from v2023.03.3 
-cmake ${CMAKE_ARGS} \
+cmake "${CMAKE_ARGS:-}" \
 -D CMAKE_BUILD_TYPE=Release \
 -D CMAKE_INSTALL_PREFIX="$PREFIX" \
 -D BOOST_ROOT="$PREFIX" \
@@ -37,7 +30,6 @@ cmake ${CMAKE_ARGS} \
 -D RDK_INSTALL_INTREE=OFF \
 -D RDK_INSTALL_STATIC_LIBS=OFF \
 -D RDK_OPTIMIZE_POPCNT=${POPCNT_OPTIMIZATION} \
-${EXTRA_CMAKE_FLAGS} \
 .
 
 make -j$CPU_COUNT
@@ -50,7 +42,7 @@ export PYTHONPATH=$SP_DIR:${PYTHONPATH:-}
 export RDBASE=$SRC_DIR
 
 # All these test failed with reason: Subprocess aborted
-ctest --output-on-failure -E \
+ctest --output-on-failure -j"${CPU_COUNT}" -E \
     "shape_test|graphmoltestPickler|molbundleTestsCatch|testEnumeration|pyChemReactionEnumerations|\
 tautomerQueryTestCatch|pyTautomerQuery|pyFilterCatalog|pyFragCatalog|distGeomHelpersCatch|pyMolDraw2D|\
 substructLibraryTest|substructLibraryCatchTest|pySubstructLibrary|pyGraphMolWrap|testScaffoldNetwork|\
