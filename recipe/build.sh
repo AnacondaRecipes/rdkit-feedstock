@@ -11,7 +11,7 @@ fi
 # `cairo` was needed to generate high-quality PNGs for structure depiction,
 # see https://www.rdkit.org/docs/Install.html?highlight=cairo#recommended-extras
 # but we  disable it by customer requested to avoid having dependency on cairo->libX11 as staring from v2023.03.3 
-cmake "${CMAKE_ARGS:-}" \
+cmake ${CMAKE_ARGS:-} \
 -D CMAKE_BUILD_TYPE=Release \
 -D CMAKE_INSTALL_PREFIX="$PREFIX" \
 -D BOOST_ROOT="$PREFIX" \
@@ -32,7 +32,7 @@ cmake "${CMAKE_ARGS:-}" \
 -D RDK_OPTIMIZE_POPCNT=${POPCNT_OPTIMIZATION} \
 .
 
-make -j$CPU_COUNT
+make -j"${CPU_COUNT}"
 make install
 
 ## How to run unit tests:

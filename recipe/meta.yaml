@@ -37,7 +37,7 @@ requirements:
     - eigen {{ eigen }}
     - freetype {{ freetype }}
     - python
-    # Required for tests
+    # Required for build layer tests
     - pytest
     - numpy {{ numpy }}
     - pillow
@@ -95,13 +95,13 @@ test:
     - test -f "${SP_DIR}/rdkit/Chem/Draw/FreeSans.ttf"                                         # [unix]
 
     # Unix: compiled python extensions
-    - test -f "${SP_DIR}/rdkit/Chem/rdchem${SHLIB_EXT}"                                        # [unix]
-    - test -f "${SP_DIR}/rdkit/Chem/rdMolDescriptors${SHLIB_EXT}"                              # [unix]
-    - test -f "${SP_DIR}/rdkit/Chem/rdMolAlign${SHLIB_EXT}"                                    # [unix]
-    - test -f "${SP_DIR}/rdkit/Chem/rdinchi${SHLIB_EXT}"                                       # [unix]
-    - test -f "${SP_DIR}/rdkit/Chem/rdFreeSASA${SHLIB_EXT}"                                    # [unix]
-    - test -f "${SP_DIR}/rdkit/Chem/MolStandardize/rdMolStandardize${SHLIB_EXT}"               # [unix]
-    - test -f "${SP_DIR}/rdkit/Avalon/pyAvalonTools${SHLIB_EXT}"                               # [unix]
+    - test -f "${SP_DIR}/rdkit/Chem/rdchem.so"                                                 # [unix]
+    - test -f "${SP_DIR}/rdkit/Chem/rdMolDescriptors.so"                                       # [unix]
+    - test -f "${SP_DIR}/rdkit/Chem/rdMolAlign.so"                                             # [unix]
+    - test -f "${SP_DIR}/rdkit/Chem/rdinchi.so"                                                # [unix]
+    - test -f "${SP_DIR}/rdkit/Chem/rdFreeSASA.so"                                             # [unix]
+    - test -f "${SP_DIR}/rdkit/Chem/MolStandardize/rdMolStandardize.so"                        # [unix]
+    - test -f "${SP_DIR}/rdkit/Avalon/pyAvalonTools.so"                                        # [unix]
 
     # Windows: headers
     - if not exist %LIBRARY_INC%\rdkit\Catalogs\Catalog.h exit 1                               # [win]
