@@ -1,5 +1,5 @@
 {% set name = "rdkit" %}
-{% set version = "2025.03.6" %}
+{% set version = "2025.09.6" %}
 {% set filename = "Release_%s.tar.gz" % version.replace(".", "_") %}
 
 package:
@@ -8,21 +8,17 @@ package:
 
 source:
   url: https://github.com/{{ name }}/{{ name }}/archive/refs/tags/{{ filename }}
-  sha256: aa719755ed10d4068a2037c113faa73007a71b551caf69b946c49cbafe04dadd
-  patches:
-    - 0001_fix_source.patch
+  sha256: 57b92e8f47d9dbd559bd808d5cf6c48a628bc36118bc35b832a35e2ca8a0c7a1
 
 build:
   number: 0
-  # We skip s390x because it's not supported.
-  skip: True # [py<37 or s390x]
+  # TODO: remove skip py314 once libboost-python-devel for py314 available
+  skip: True # [py<37 or py>=314]
   run_exports:
     - {{ pin_subpackage('rdkit', max_pin='x.x.x') }}
 
 requirements:
   build:
-    - patch  # [not win]
-    - m2-patch  # [win]
     - {{ compiler('c') }}
     - {{ stdlib('c') }}
     - {{ compiler('cxx') }}
@@ -31,17 +27,17 @@ requirements:
     - cmake >=3.16
     # Tests are using catch2 which is unavailable on the main channel,
     # using vendored one instead
-    - git                                    # [linux]
+    - git
     - jom                                    # [win]
     - make                                   # [unix]
-    - pkg-config
+    - pkg-config                             # [unix]
   host:
     - libboost-devel {{ libboost }}
     - libboost-python-devel {{ libboost }}
     - eigen {{ eigen }}
     - freetype {{ freetype }}
     - python
-    # Required for tests
+    # Required for build layer tests
     - pytest
     - numpy {{ numpy }}
     - pillow
@@ -80,7 +76,58 @@ test:
   commands:
     - pip check
     - python -c "import rdkit; assert rdkit.__version__ == '{{ version }}'"
-    - if not exist %LIBRARY_INC%\\rdkit\\Catalogs\\Catalog.h exit 1   # [win]
+
+    # Unix: headers
+    - test -f "${PREFIX}/include/rdkit/Catalogs/Catalog.h"                                     # [unix]
+    - test -f "${PREFIX}/include/rdkit/GraphMol/ROMol.h"                                       # [unix]
+    - test -f "${PREFIX}/include/rdkit/GraphMol/Descriptors/MolDescriptors.h"                  # [unix]
+
+    # Unix: core shared libs
+    - test -f "${PREFIX}/lib/libRDKitGraphMol${SHLIB_EXT}"                                     # [unix]
+    - test -f "${PREFIX}/lib/libRDKitSmilesParse${SHLIB_EXT}"                                  # [unix]
+    - test -f "${PREFIX}/lib/libRDKitMolDraw2D${SHLIB_EXT}"                                    # [unix]
+    - test -f "${PREFIX}/lib/libRDKitChemReactions${SHLIB_EXT}"                                # [unix]
+
+    # Unix: python package files
+    - test -f "${SP_DIR}/rdkit/__init__.py"                                                    # [unix]
+    - test -f "${SP_DIR}/rdkit/Chem/__init__.py"                                               # [unix]
+    - test -f "${SP_DIR}/rdkit/Chem/AllChem.py"                                                # [unix]
+    - test -f "${SP_DIR}/rdkit/Chem/Draw/FreeSans.ttf"                                         # [unix]
+
+    # Unix: compiled python extensions
+    - test -f "${SP_DIR}/rdkit/Chem/rdchem.so"                                                 # [unix]
+    - test -f "${SP_DIR}/rdkit/Chem/rdMolDescriptors.so"                                       # [unix]
+    - test -f "${SP_DIR}/rdkit/Chem/rdMolAlign.so"                                             # [unix]
+    - test -f "${SP_DIR}/rdkit/Chem/rdinchi.so"                                                # [unix]
+    - test -f "${SP_DIR}/rdkit/Chem/rdFreeSASA.so"                                             # [unix]
+    - test -f "${SP_DIR}/rdkit/Chem/MolStandardize/rdMolStandardize.so"                        # [unix]
+    - test -f "${SP_DIR}/rdkit/Avalon/pyAvalonTools.so"                                        # [unix]
+
+    # Windows: headers
+    - if not exist %LIBRARY_INC%\rdkit\Catalogs\Catalog.h exit 1                               # [win]
+    - if not exist %LIBRARY_INC%\rdkit\GraphMol\ROMol.h exit 1                                 # [win]
+    - if not exist %LIBRARY_INC%\rdkit\GraphMol\Descriptors\MolDescriptors.h exit 1            # [win]
+
+    # Windows: core import libs / dlls
+    - if not exist %LIBRARY_LIB%\RDKitGraphMol.lib exit 1                                      # [win]
+    - if not exist %LIBRARY_LIB%\RDKitSmilesParse.lib exit 1                                   # [win]
+    - if not exist %LIBRARY_LIB%\RDKitMolDraw2D.lib exit 1                                     # [win]
+    - if not exist %LIBRARY_LIB%\RDKitChemReactions.lib exit 1                                 # [win]
+
+    # Windows: python package files
+    - if not exist %SP_DIR%\rdkit\__init__.py exit 1                                           # [win]
+    - if not exist %SP_DIR%\rdkit\Chem\__init__.py exit 1                                      # [win]
+    - if not exist %SP_DIR%\rdkit\Chem\AllChem.py exit 1                                       # [win]
+    - if not exist %SP_DIR%\rdkit\Chem\Draw\FreeSans.ttf exit 1                                # [win]
+
+    # Windows: compiled python extensions
+    - if not exist %SP_DIR%\rdkit\Chem\rdchem.pyd exit 1                                       # [win]
+    - if not exist %SP_DIR%\rdkit\Chem\rdMolDescriptors.pyd exit 1                             # [win]
+    - if not exist %SP_DIR%\rdkit\Chem\rdMolAlign.pyd exit 1                                   # [win]
+    - if not exist %SP_DIR%\rdkit\Chem\rdinchi.pyd exit 1                                      # [win]
+    - if not exist %SP_DIR%\rdkit\Chem\rdFreeSASA.pyd exit 1                                   # [win]
+    - if not exist %SP_DIR%\rdkit\Chem\MolStandardize\rdMolStandardize.pyd exit 1              # [win]
+    - if not exist %SP_DIR%\rdkit\Avalon\pyAvalonTools.pyd exit 1                              # [win]
 
 about:
   home: https://rdkit.org
