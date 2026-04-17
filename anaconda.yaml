@@ -3,6 +3,6 @@ upstream_sources:
   - github:
       identifier: rdkit/rdkit
       use_max_tag: true
-      exclude_regex: (?i)^(?=.*(?:(?<=\d)rc\d*|(?<=\d)dev\d+|(?:^|[-._])(?:alpha|beta|gamma|pre|preview)(?:\d+)?|[-._]rc\d+|(?:^|[-._])dev\d+|(?:\d+\.)+\d+[ab]\d*)).+$
-      from_pattern: ^v?(\d+(?:\.\d+)*.*)$
-      to_pattern: \1
+      include_regex: ^Release_\d{4}_\d{2}_\d+$
+      from_pattern: ^Release_(\d{4})_(\d{2})_(\d+)$
+      to_pattern: \1.\2.\3
