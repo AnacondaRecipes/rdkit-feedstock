@@ -1,6 +1,6 @@
 {% set name = "rdkit" %}
 {% set version = "2026.03.5" %}
-{% set filename = "Release_%s.tar.gz" % version.replace(".", "_") %}
+{% set filename = "Release_" ~ version.replace(".", "_") ~ ".tar.gz" %}
 
 package:
   name: {{ name|lower }}
@@ -35,6 +35,7 @@ requirements:
     - libboost-devel {{ libboost }}
     - libboost-python-devel {{ libboost }}
     - eigen {{ eigen }}
+    - expat {{ expat }}
     - freetype {{ freetype }}
     - python
     # Required for build layer tests
@@ -45,7 +46,8 @@ requirements:
     - setuptools >=58.0.4
   run:
     - python
-    - {{ pin_compatible('numpy') }}
+    - numpy
+    - expat {{ expat }}
     - pandas
     - matplotlib-base
     - reportlab
