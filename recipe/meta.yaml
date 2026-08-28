@@ -3,7 +3,7 @@
 {% set filename = "Release_" ~ version.replace(".", "_") ~ ".tar.gz" %}
 
 package:
-  name: {{ name|lower }}
+  name: {{ name }}
   version: {{ version }}
 
 source:
@@ -13,7 +13,7 @@ source:
 build:
   number: 0
   # TODO: remove skip py314 once libboost-python-devel for py314 available
-  skip: True # [py<37 or py>=314]
+  skip: true # [py<37 or py>=314]
   run_exports:
     - {{ pin_subpackage('rdkit', max_pin='x.x.x') }}
 
